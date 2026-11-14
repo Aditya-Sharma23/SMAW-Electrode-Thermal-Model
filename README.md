@@ -8,6 +8,10 @@ This code accompanies the paper:
 > Aditya Sharma, Sunil Pandey, Manoj Kumar, Department of Mechanical-Mechatronics Engineering, LNMIIT Jaipur
 > Accepted at the ISME Conference 2026, IIT Guwahati (27–31 December 2026)
 
+![Open-loop simulation of an E6013 3.2 mm electrode at 120 ± 10 A](docs/summary_E6013.png)
+
+*Open-loop run for an E6013 3.2 mm electrode at 120 ± 10 A. The rod burns from 320 mm to 40 mm in about 37 s. Its mean temperature passes the 500 °C warning level at about 25 s and reaches about 740 °C by the end, which is the overheating the closed-loop controller is designed to prevent. Resistance first rises as the wire heats, then falls as the rod gets shorter. The voltage ripple comes from the pulsed current. Generated with `python plot_summary.py`.*
+
 ## The problem
 
 During manual arc welding, a high current flows through the electrode's core wire for tens of seconds. Joule heating (I²R) raises the wire temperature, and resistivity rises with temperature, so the heating feeds itself. The rod can glow red, the flux coating degrades, and the gas shield protecting the weld weakens. This model tracks that feedback over time and tests whether actively lowering the current can stop it.
@@ -56,6 +60,7 @@ Each entry holds the geometry, the nominal current and the minimum allowed curre
 | `closed_loop_engine.py` | The same physics wrapped as a class (`ClosedLoopEngine`) that can be stepped with any commanded current. It sub-steps internally to stay stable |
 | `controller.py` | Closed-loop current controller. Steps the engine every 0.1 s and lowers the current as the mean rod temperature crosses each threshold |
 | `setup_database.py` | Creates or refreshes `database.db` with the five electrodes |
+| `plot_summary.py` | Runs `brain.py` without opening windows and saves the 2×2 summary figure to `docs/` |
 | `current_profile.json` | Example output from `brain.py` (temperature history for E6013) |
 
 ## Closed-loop control logic
@@ -87,6 +92,12 @@ Closed-loop controller (runs the controlled weld, then opens the open-loop plots
 
 ```bash
 python controller.py
+```
+
+Summary figure for any electrode (saved as a PNG, no windows):
+
+```bash
+python plot_summary.py E7018_3.2mm docs/summary_E7018.png
 ```
 
 Rebuild the electrode database:
